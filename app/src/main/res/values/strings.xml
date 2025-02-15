@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">Todo App</string>
+    <string name="title_hint">タスク名（必須・32文字以内）</string>
+    <string name="select_due_date">Select Due Date</string>
+    <string name="save_button">Save</string>
+    <string name="create_task">タスク作成</string>
+    <string name="delete_task">タスク削除</string>
+    <string name="header_title">タスク名</string>
+    <string name="header_progress">達成度</string>
+    <string name="header_end_date">期日</string>
+    <string name="dialog_label_title">タスク名</string>
+    <string name="dialog_label_priority">優先度</string>
+    <string-array name="priority_items">
+        <item>低</item>
+        <item>中（デフォルト）</item>
+        <item>高</item>
+    </string-array>
+    <string-array name="progress_items">
+        <item>0%</item>
+        <item>10%</item>
+        <item>20%</item>
+        <item>30%</item>
+        <item>40%</item>
+        <item>50%</item>
+        <item>60%</item>
+        <item>70%</item>
+        <item>80%</item>
+        <item>90%</item>
+        <item>100%</item>
+    </string-array>
+    <string name="dialog_label_end_date">期日</string>
+    <string name="dialog_msg_confirm_delete">タスクを削除しますか？</string>
+    <string name="cancel">キャンセル</string>
+    <string name="create">作成</string>
+    <string name="delete">削除</string>
+    <string name="msg_create_task">タスクを作成しました</string>
+    <string name="msg_delete_task">タスクを削除しました</string>
+    <string name="select_date">日付選択</string>
+    <string name="select_end_date">日付選択</string>
+    <string name="error_msg_title">タスク名を入力してください</string>
+    <string name="error_msg_end_date">期日を選択してください</string>
+</resources>
