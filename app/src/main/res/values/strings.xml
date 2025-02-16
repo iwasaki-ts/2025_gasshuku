@@ -33,8 +33,8 @@
     <string name="cancel">キャンセル</string>
     <string name="select_date">日付選択</string>
     <string name="select_end_date">日付選択</string>
-    <string name="error_msg_title">!!!タスク名を入力してください!!!</string>
-    <string name="error_msg_end_date">!!!期日を選択してください!!!</string>
+    <string name="error_msg_title">！！！タスク名を入力してください！！！</string>
+    <string name="error_msg_end_date">！！！期日を選択してください！！！</string>
     <string name="msg_create_task">タスクを作成しました</string>
     <!--　削除ダイアログ -->
     <string name="dialog_msg_confirm_delete">タスクを削除しますか？</string>

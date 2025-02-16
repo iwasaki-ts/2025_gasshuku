@@ -40,9 +40,13 @@ public class TaskRepository {
      * @param taskInfo タスク情報
      */
     public void updateTask(TaskInfo taskInfo) {
-        TaskEntity entity = TodoAppUtil.convertTaskInfoToTaskEntity(taskInfo);
-        dao.updateTask(entity);
-        Log.i(TAG, "updateTask update id = " + taskInfo.getId());
+        /**
+         * ---------------------------
+         * 課題② DBへのタスクの登録 / 更新 / 削除を実装する
+         * ---------------------------
+         */
+        //  --- 引数のタスク情報をタスクエンティティに変換する ---
+        //  --- DAOの更新メソッドを呼び出す ---
     }
 
     /**
@@ -50,11 +54,13 @@ public class TaskRepository {
      * @param id ID
      */
     public void deleteTask(Long id) {
-        Log.i(TAG, "saveTask delete id = " + id);
-        TaskEntity task = dao.getTask(id);
-        if (task != null) {
-            dao.delete(task);
-        }
+        /**
+         * ---------------------------
+         * 課題② DBへのタスクの登録 / 更新 / 削除を実装する
+         * ---------------------------
+         */
+        //  --- DBから対象のIDでタスクエンティティを取得する ---
+        //  --- タスクエンティティが存在する場合は、DAOの削除メソッドを呼び出す ---
     }
 
     /**

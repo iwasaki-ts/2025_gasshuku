@@ -11,8 +11,10 @@ public class TaskInfo {
     // 期日
     private String endDate;
     // 達成度
+    // 0: 0% / 1:10% / ... / 9: 90% / 10: 100%
     private int progress;
     // 優先度
+    // 0: 低 / 1: 中 / 2: 高
     private int priority;
 
     public TaskInfo(long id, String title, String endDate, int progress, int priority) {

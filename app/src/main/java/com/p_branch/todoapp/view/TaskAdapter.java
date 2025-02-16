@@ -75,7 +75,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskItemViewHo
             public void onItemSelected(AdapterView<?> parent, View view, int progress, long id) {
                 if (item.getProgress() != progress) {
                     item.setProgress(progress);
-                    setBackGroundColor(holder, item);
                     if (listener != null) {
                         listener.onItemUpdated(item);
                     }
@@ -85,7 +84,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskItemViewHo
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
-        setBackGroundColor(holder, item);
         // 削除ボタンを押した時の処理
         holder.deleteImageView.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -114,22 +112,18 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskItemViewHo
      * リストの背景色を変える
      */
     private void setBackGroundColor(TaskItemViewHolder holder, TaskItem item) {
+        // 達成度: 100%
         int maxProgress = context.getResources().getStringArray(R.array.progress_items).length - 1;
-        if (item.getProgress() == maxProgress) {
-            holder.view.setBackgroundColor(context.getColor(R.color.complete));
-        } else {
-            switch (item.getPriority()) {
-                case 0:
-                    holder.view.setBackgroundColor(context.getColor(R.color.priorityLow));
-                    break;
-                case 2:
-                    holder.view.setBackgroundColor(context.getColor(R.color.priorityHigh));
-                    break;
-                default:
-                    holder.view.setBackgroundColor(context.getColor(R.color.white));
-                    break;
-            }
-        }
+        /**
+         * ---------------------------
+         * 課題③ タスクの背景色を設定できるようにする
+         * ---------------------------
+         */
+        // --- 達成度が100%ならR.color.completeを設定 ---
+        // --- 優先度が低ならR.color.priorityLowを設定 ---
+        // --- 優先度が低ならR.color.priorityHighを設定 ---
+        // --- それ以外ならR.color.whiteを設定 ---
+        // --- メソッド呼び出し側もあわせて実装すること ---
     }
 
     /**

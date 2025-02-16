@@ -148,24 +148,17 @@ public class MainActivity extends AppCompatActivity {
             TextView titleErrorTextView = dialogView.findViewById(R.id.titleValidationErrorTextView);
             TextView endDateErrorTextView = dialogView.findViewById(R.id.endDateErrorTextView);
 
-            boolean isEmptyTitleEditText = titleEditText.getText().toString().isEmpty();
-            boolean isEmptyEndDateEditText = endDateEditText.getText().toString().isEmpty();
-            if (isEmptyTitleEditText) {
-                titleErrorTextView.setVisibility(View.VISIBLE);
-            } else {
-                titleErrorTextView.setVisibility(View.INVISIBLE);
-            }
-            if (isEmptyEndDateEditText) {
-                endDateErrorTextView.setVisibility(View.VISIBLE);
-            } else {
-                endDateErrorTextView.setVisibility(View.INVISIBLE);
-            }
-            if (isEmptyTitleEditText || isEmptyEndDateEditText)  {
-                return;
-            }
+            /**
+             * ---------------------------
+             * 課題① バリデーションを実装する
+             * ---------------------------
+             */
+            // --- タスク名が空ならエラーメッセージを表示する / 空じゃないならエラーメッセージ非表示---
+            // --- 日付が空ならエラーメッセージを表示する / 空じゃないならエラーメッセージ非表示 ---
+            // --- バリデーションエラーの場合は後続の処理をしない ---
 
+            // DBへのタスク登録
             dbHandler.post(() -> {
-                // タスクをDBへ登録
                 TaskInfo taskInfo = new TaskInfo(
                         0L,
                         titleEditText.getText().toString(),
@@ -173,9 +166,16 @@ public class MainActivity extends AppCompatActivity {
                         0,
                         prioritySpinner.getSelectedItemPosition()
                 );
-                Long id = taskRepository.insertTask(taskInfo);
-                // DBで採番されたIDをセット
-                taskInfo.setId(id);
+
+                /**
+                 * ---------------------------
+                 * 課題② DBへのタスクの登録 / 更新 / 削除を実装する
+                 * ---------------------------
+                 */
+                // --- タスクをDBへ登録 ---
+                // --- DBで採番されたIDをセット ---
+
+                // UIに表示反映
                 mainHandler.post(() -> {
                     taskAdapter.addItem(TodoAppUtil.convertTaskInfoToTaskItem(taskInfo));
                     Toast.makeText(getApplicationContext(), getString(R.string.msg_create_task), Toast.LENGTH_SHORT).show();
