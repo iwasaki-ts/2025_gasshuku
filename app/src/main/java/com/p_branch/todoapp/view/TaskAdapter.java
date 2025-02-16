@@ -1,5 +1,6 @@
 package com.p_branch.todoapp.view;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -17,11 +18,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.p_branch.todoapp.R;
 import java.util.ArrayList;
 
+/**
+ * タスクアダプタ
+ * タスクのリストを保持してViewの表示に反映するためのクラス
+ */
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskItemViewHolder> {
 
+    // アプリコンテキスト
     Context context;
+    // UI表示の元になるタスクのリスト
     ArrayList<TaskItem> taskItemList;
-
+    // DBの更新処理をMainActivityにさせるためのListener
     Listener listener;
 
     public TaskAdapter(Context context, ArrayList<TaskItem> taskItemList) {
@@ -29,6 +36,15 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskItemViewHo
         this.taskItemList = taskItemList;
     }
 
+    /**
+     * Viewに表示する各タスクのレイアウトを作成する
+     *
+     * @param parent The ViewGroup into which the new View will be added after it is bound to
+     *               an adapter position.
+     * @param viewType The view type of the new View.
+     *
+     * @return
+     */
     @Override
     public TaskItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
@@ -36,6 +52,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskItemViewHo
         return new TaskItemViewHolder(itemView);
     }
 
+    /**
+     * 各タスクのレイアウトに表示する要素を作成する
+     *
+     * @param holder The ViewHolder which should be updated to represent the contents of the
+     *        item at the given position in the data set.
+     * @param position The position of the item within the adapter's data set.
+     */
     @Override
     public void onBindViewHolder(TaskItemViewHolder holder, int position) {
         TaskItem item = taskItemList.get(position);
@@ -87,6 +110,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskItemViewHo
         );
     }
 
+    /**
+     * リストの背景色を変える
+     */
     private void setBackGroundColor(TaskItemViewHolder holder, TaskItem item) {
         int maxProgress = context.getResources().getStringArray(R.array.progress_items).length - 1;
         if (item.getProgress() == maxProgress) {
@@ -106,13 +132,22 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskItemViewHo
         }
     }
 
+    /**
+     * タスク追加をViewに反映する
+     */
     public void addItem(TaskItem taskItem) {
-        taskItemList.add(taskItem);  // 新しいアイテムをリストに追加
-        notifyItemInserted(taskItemList.size() - 1);  // RecyclerViewに追加されたアイテムを通知
+        taskItemList.add(taskItem);
+        // notifyを呼ぶことで再びonBindViewHolder()が呼ばれ、レイアウトが更新される
+        notifyItemInserted(taskItemList.size() - 1);
     }
 
+    /**
+     * タスク削除をViewに反映する
+     */
+    @SuppressLint("NotifyDataSetChanged")
     public void deleteItem(int position) {
         taskItemList.remove(position);
+        // notifyを呼ぶことで再びonBindViewHolder()が呼ばれ、レイアウトが更新される
         notifyDataSetChanged();
     }
 
@@ -142,7 +177,16 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskItemViewHo
     }
 
     public interface Listener {
-        public void onItemUpdated(TaskItem item);
-        public void onItemDeleted(TaskItem item);
+        /**
+         * タスク更新時にMainActivityに通知する
+         * @param item タスクアイテム
+         */
+        void onItemUpdated(TaskItem item);
+
+        /**
+         * タスク削除時にMainActivityに通知する
+         * @param item タスクアイテム
+         */
+        void onItemDeleted(TaskItem item);
     }
 }

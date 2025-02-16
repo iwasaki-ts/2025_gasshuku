@@ -5,9 +5,7 @@ import com.p_branch.todoapp.repository.database.TaskEntity;
 import com.p_branch.todoapp.view.TaskItem;
 
 public class TodoAppUtil {
-    /**
-     * DBのデータをUI表示の情報に変換する
-     */
+
     /**
      * 引数のタスクアイテムをタスク情報に変換する
      *
@@ -31,13 +29,13 @@ public class TodoAppUtil {
      * @return taskInfo タスク情報
      */
     public static TaskInfo convertTaskItemToTaskInfo(TaskItem taskItem) {
-        TaskInfo taskInfo = new TaskInfo();
-        taskInfo.setId(taskItem.getId());
-        taskInfo.setTitle(taskItem.getTitle());
-        taskInfo.setEndDate(taskItem.getEndDate());
-        taskInfo.setProgress(taskItem.getProgress());
-        taskInfo.setPriority(taskItem.getPriority());
-        return taskInfo;
+        return new TaskInfo(
+                taskItem.getId(),
+                taskItem.getTitle(),
+                taskItem.getEndDate(),
+                taskItem.getProgress(),
+                taskItem.getPriority()
+        );
     }
 
     /**
@@ -63,12 +61,12 @@ public class TodoAppUtil {
      * @return taskInfo タスク情報
      */
     public static TaskInfo convertTaskEntityToTaskInfo(TaskEntity taskEntity) {
-        TaskInfo taskInfo = new TaskInfo();
-        taskInfo.setId(taskEntity.id);
-        taskInfo.setTitle(taskEntity.title);
-        taskInfo.setEndDate(taskEntity.endDate);
-        taskInfo.setProgress(taskEntity.progress);
-        taskInfo.setPriority(taskEntity.priority);
-        return taskInfo;
+        return new TaskInfo(
+                taskEntity.id,
+                taskEntity.title,
+                taskEntity.endDate,
+                taskEntity.progress,
+                taskEntity.priority
+        );
     }
 }

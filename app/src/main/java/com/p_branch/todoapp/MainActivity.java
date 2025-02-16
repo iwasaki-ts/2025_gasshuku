@@ -1,8 +1,6 @@
 package com.p_branch.todoapp;
 
 import android.app.DatePickerDialog;
-import android.content.DialogInterface;
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -30,12 +28,18 @@ import com.p_branch.todoapp.view.TaskItem;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import kotlinx.coroutines.scheduling.Task;
-
 public class MainActivity extends AppCompatActivity {
 
+    // タスクアダプタ
+    // タスクのリストをViewに反映するクラス
     private TaskAdapter taskAdapter;
+
+    // タスクアダプタリスナー
+    // リスト内のタスクの更新・削除を行った際にMainActivityへ通知してDBに反映するクラス
     private TaskAdapterListener taskAdapterListener;
+
+    // タスクレポジトリ
+    // DBへのアクセス用クラス
     private TaskRepository taskRepository;
 
     // DBアクセス用の別スレッド
@@ -48,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // レイアウト読み込み
         setContentView(R.layout.activity_main);
 
         mainHandler = new Handler(Looper.getMainLooper());
@@ -56,8 +61,10 @@ public class MainActivity extends AppCompatActivity {
         dbHandlerThread.start();
         dbHandler = new Handler(dbHandlerThread.getLooper());
 
+        // タスクレポジトリ初期化
         taskRepository = new TaskRepository(this);
 
+        // アダプタ初期化
         initializeAdapter();
         Button addButton = findViewById(R.id.addButton);
         addButton.setOnClickListener(v -> showCreateTaskDialog());
@@ -94,27 +101,27 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    // ダイアログでタスクを追加
+    /**
+     * タスク作成ダイアログを表示する
+     */
     private void showCreateTaskDialog() {
-        // ダイアログのビューを作成
+        // ダイアログのレイアウトを読み込み
         View dialogView = getLayoutInflater().inflate(R.layout.add_dialog, null);
+        // レイアウトの各要素取得
         EditText titleEditText = dialogView.findViewById(R.id.titleEditText);
         EditText endDateEditText = dialogView.findViewById(R.id.endDateEditText);
         Button selectDateButton = dialogView.findViewById(R.id.selectDateButton);
         Spinner prioritySpinner = dialogView.findViewById(R.id.prioritySpinner);
-        String[] items = getResources().getStringArray(R.array.priority_items);
         // EditTextにフォーカスが当たったときにキーボードを表示
         titleEditText.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
                 InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
                 imm.showSoftInput(v, InputMethodManager.SHOW_IMPLICIT);
-            } else {
-                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
             }
         });
 
         // 優先度のドロップダウン作成
+        String[] items = getResources().getStringArray(R.array.priority_items);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, items);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // ドロップダウンのアイテムビューを設定
         prioritySpinner.setAdapter(adapter);
@@ -123,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
         // 完了予定日の選択
         selectDateButton.setOnClickListener(v -> showDatePickerDialog(endDateEditText));
 
+        // ダイアログ作成
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         AlertDialog dialog = builder.setTitle(getString(R.string.create_task))
                 .setView(dialogView)
@@ -135,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
                 .create();
         dialog.show();
 
+        // 作成ボタン押下時のリスナー設定
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
             TextView titleErrorTextView = dialogView.findViewById(R.id.titleValidationErrorTextView);
             TextView endDateErrorTextView = dialogView.findViewById(R.id.endDateErrorTextView);
@@ -157,11 +166,13 @@ public class MainActivity extends AppCompatActivity {
 
             dbHandler.post(() -> {
                 // タスクをDBへ登録
-                TaskInfo taskInfo = new TaskInfo();
-                taskInfo.setTitle(titleEditText.getText().toString());
-                taskInfo.setEndDate(endDateEditText.getText().toString());
-                taskInfo.setProgress(0);
-                taskInfo.setPriority(prioritySpinner.getSelectedItemPosition());
+                TaskInfo taskInfo = new TaskInfo(
+                        0L,
+                        titleEditText.getText().toString(),
+                        endDateEditText.getText().toString(),
+                        0,
+                        prioritySpinner.getSelectedItemPosition()
+                );
                 Long id = taskRepository.insertTask(taskInfo);
                 // DBで採番されたIDをセット
                 taskInfo.setId(id);
@@ -174,14 +185,17 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    // 完了予定日を選択するDatePickerDialog
+    /**
+     * 日付選択用のカレンダーを表示する
+     * @param endDateEditText EditText
+     */
     private void showDatePickerDialog(EditText endDateEditText) {
         Calendar calendar = Calendar.getInstance();
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 MainActivity.this,
                 (view, year, month, dayOfMonth) -> {
-                    month++; // monthは0から始まるので
-                    endDateEditText.setText(year + "/" + month + "/" + dayOfMonth);
+                    String dateStr = year + "/" + (month + 1) + "/" + dayOfMonth;
+                    endDateEditText.setText(dateStr);
                 },
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),

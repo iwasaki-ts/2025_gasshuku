@@ -15,6 +15,14 @@ public class TaskInfo {
     // 優先度
     private int priority;
 
+    public TaskInfo(long id, String title, String endDate, int progress, int priority) {
+        this.id = id;
+        this.title = title;
+        this.endDate = endDate;
+        this.progress = progress;
+        this.priority = priority;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }

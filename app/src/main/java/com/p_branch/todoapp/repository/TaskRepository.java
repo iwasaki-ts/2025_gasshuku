@@ -24,8 +24,8 @@ public class TaskRepository {
     }
 
     /**
-     * タスクをDBに登録する
-     * @param taskInfo タスク
+     * レコードをDBに登録する
+     * @param taskInfo タスク情報
      * @return DBで自動採番されたID
      */
     public Long insertTask(TaskInfo taskInfo) {
@@ -35,12 +35,20 @@ public class TaskRepository {
         return id;
     }
 
+    /**
+     * DBのレコードを更新
+     * @param taskInfo タスク情報
+     */
     public void updateTask(TaskInfo taskInfo) {
         TaskEntity entity = TodoAppUtil.convertTaskInfoToTaskEntity(taskInfo);
         dao.updateTask(entity);
         Log.i(TAG, "updateTask update id = " + taskInfo.getId());
     }
 
+    /**
+     * DBのレコードを削除
+     * @param id ID
+     */
     public void deleteTask(Long id) {
         Log.i(TAG, "saveTask delete id = " + id);
         TaskEntity task = dao.getTask(id);
@@ -49,6 +57,10 @@ public class TaskRepository {
         }
     }
 
+    /**
+     * DBのレコードを全件取得する
+     * @return タスク情報リスト
+     */
     public ArrayList<TaskInfo> getAllTaskInfo() {
         Log.i(TAG, "getAllTaskInfo");
         ArrayList<TaskInfo> taskInfoList = new ArrayList<>();
